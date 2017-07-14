@@ -1,36 +1,29 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: erandir
- * Date: 14/07/17
- * Time: 09:43
- */
-
-namespace App\Helpers;
+namespace Core\Request;
 
 use Core\Request\Request;
 
 /**
- * Class PostRequest
+ * Class GetRequest
  * @package App\Helpers
  */
-class PostRequest implements Request
+class GetRequest implements Request
 {
     /**
      * Atributo para receber os dados.
      *
      * @var
      */
-    private static $post;
+    private static $get;
 
     /**
-     * Adiciona os dados da requisição ao atributo $post.
+     * Adiciona os dados da requisição ao atributo $get.
      *
      * @param array $data
      */
     public static function add(array $data)
     {
-        self::$post = $data;
+        self::$get[] = $data;
     }
 
     /**
@@ -38,9 +31,9 @@ class PostRequest implements Request
      *
      * @return mixed
      */
-    public function all()
+    public static function all()
     {
-        return self::$post;
+        return self::$get;
     }
 
     /**
@@ -52,6 +45,6 @@ class PostRequest implements Request
      */
     public static function input($input)
     {
-        return self::$post[$input];
+        return self::$get[$input];
     }
 }

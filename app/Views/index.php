@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: erandir
- * Date: 13/07/17
- * Time: 19:13
- */
+echo $teste;
 ?>
 
-chegou aqui!
+<a href="/cadastro">Cadastro de Produto</a>

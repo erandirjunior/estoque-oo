@@ -1,13 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: erandir
- * Date: 14/07/17
- * Time: 09:41
- */
-
 namespace Core\Request;
-
 
 /**
  * Interface Request
@@ -29,7 +21,7 @@ interface Request
      *
      * @return mixed
      */
-    public function all();
+    public static function all();
 
     /**
      * Retorna um dado especifico da requisição.

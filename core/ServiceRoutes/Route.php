@@ -1,15 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: erandir
- * Date: 14/07/17
- * Time: 09:39
- */
-
 namespace Core\ServiceRoutes;
 
-use App\Helpers\GetRequest;
-use App\Helpers\PostRequest;
+use Core\Request\GetRequest;
+use Core\Request\PostRequest;
+
 
 /**
  * Class Route
@@ -42,6 +36,7 @@ class Route
     public static function post(array $post)
     {
         PostRequest::add($_POST);
+        //var_dump(PostRequest::all());
         self::add($post);
     }
 
@@ -53,6 +48,8 @@ class Route
     public static function get(array $get)
     {
         GetRequest::add($_GET);
+        //echo "<pre>";
+        //var_dump(GetRequest::all());
         self::add($get);
     }
 

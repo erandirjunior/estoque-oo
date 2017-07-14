@@ -6,4 +6,4 @@
  * Time: 10:40
  */
 
-echo "erro";
+echo $this->error;
