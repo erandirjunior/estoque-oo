@@ -2,9 +2,8 @@
 /**
  * Created by PhpStorm.
  * User: erandir
- * Date: 13/07/17
- * Time: 19:13
+ * Date: 14/07/17
+ * Time: 10:40
  */
-?>
 
-chegou aqui!
+echo "erro";

@@ -8,6 +8,8 @@
 
 namespace Core\Model;
 
+use Core\Error\Error;
+
 
 /**
  * Class Conn
@@ -51,10 +53,18 @@ class Conn
     public static function getConnection()
     {
         if (self::$instance === null) {
-            $con = self::getConf();
 
-            self::$instance = new \PDO("mysql:host={$con['HOST']};dbname={$con['DBNAME']}", $con['USER'], $con['PASSWORD']);
-            self::$instance->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+            try {
+                $con = self::getConf();
+
+                self::$instance = new \PDO("mysql:host={$con['HOST']};dbname={$con['DBNAME']}", $con['USER'], $con['PASSWORD']);
+                self::$instance->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+
+            } catch (\PDOException $e) {
+                $error = new Error();
+                $error->errorMessage($e->getMessage());
+            }
+
         }
 
         return self::$instance;
