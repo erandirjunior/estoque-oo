@@ -1,0 +1,14 @@
+{
+  "authors": [
+    {
+      "name": "Antonio Erandir Feitosa Soares Junior",
+      "email": "aefs12junior@gmail.com"
+    }
+  ],
+  "autoload" : {
+    "psr-4" : {
+      "App\\" : "app/",
+      "Core\\" : "core/"
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "HOST" : "localhost",
+  "DBNAME" : "estoque",
+  "USER" : "user",
+  "PASSWORD" : "user"
+}
