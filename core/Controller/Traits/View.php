@@ -15,11 +15,19 @@ trait View
      */
     public function template($view, $data = null)
     {
-        if (file_exists("../app/Views/" . $view . ".php")) {
-            require_once "../app/Views/" . $view . ".php";
-        } else {
+        try {
+            if (!is_null($data)) {
+                extract($data);
+            }
+
+            if (file_exists("../app/Views/" . $view . ".php")) {
+                require_once "../app/Views/" . $view . ".php";
+            } else {
+                throw new \Exception("view não encontrada");
+            }
+        } catch (\Exception $e) {
             $error = new \Core\Error\Error();
-            $error->errorMessage("error");
+            $error->errorMessage($e);
         }
 
     }

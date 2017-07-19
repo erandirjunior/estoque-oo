@@ -23,7 +23,7 @@ class GetRequest implements Request
      */
     public static function add(array $data)
     {
-        self::$get[] = $data;
+        self::$get = $data['REQUEST_URI'];
     }
 
     /**
@@ -45,6 +45,8 @@ class GetRequest implements Request
      */
     public static function input($input)
     {
-        return self::$get[$input];
+        $data = explode("/", self::$get);
+        var_dump($data);
+        return $data[$input];
     }
 }

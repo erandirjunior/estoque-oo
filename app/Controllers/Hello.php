@@ -9,11 +9,8 @@ class Hello extends Controller
 {
     public function index()
     {
-        echo "<pre>";
-        var_dump(Produto::all());
-        echo "</pre>";
-
-        return $this->template('index');
+        $produtos = Produto::all();
+        return $this->template('index', compact('produtos'));
     }
 
     public function cadastro()
@@ -29,12 +26,8 @@ class Hello extends Controller
         $pessoa     = Requests::postInput('pessoa');
         $categoria  = Requests::postInput('categoria');
 
-        echo $nome;
-
         Produto::insert(['nome_prod' => $nome, 'valor_prod' => $valor, 'desc_prod' => $descricao, 'id_pessoa' => $pessoa, 'id_categoria' => $categoria]);
 
         header("Location: /");
-
-        //var_dump(Requests::postAll());
     }
 }

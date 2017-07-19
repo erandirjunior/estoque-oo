@@ -36,7 +36,6 @@ class Route
     public static function post(array $post)
     {
         PostRequest::add($_POST);
-        //var_dump(PostRequest::all());
         self::add($post);
     }
 
@@ -47,9 +46,7 @@ class Route
      */
     public static function get(array $get)
     {
-        GetRequest::add($_GET);
-        //echo "<pre>";
-        //var_dump(GetRequest::all());
+        GetRequest::add($_SERVER);
         self::add($get);
     }
 

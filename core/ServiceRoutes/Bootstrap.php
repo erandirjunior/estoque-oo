@@ -17,41 +17,46 @@ class Bootstrap
 
     public function index(string $url)
     {
-        array_walk($this->routes[0], function($route) use ($url) {
+        try {
+            array_walk($this->routes[0], function ($route) use ($url) {
 
-            if (strpos($route[0], "@")) {
-                //$rotaLimpa = substr($route[0], 0, strpos($route[0], "@"));
-                $rotaTratada = str_replace("@", '', $route[0]);
+                if (strpos($route[0], "@")) {
+                    //$rotaLimpa = substr($route[0], 0, strpos($route[0], "@"));
+                    $rotaTratada = str_replace("@", '', $route[0]);
 
-                // obtendo quantos caracteres tem na rota
-                $tamanhoDaRota = strlen($rotaTratada);
+                    // obtendo quantos caracteres tem na rota
+                    $tamanhoDaRota = strlen($rotaTratada);
 
-                // obtendo quantos caracteres tem na url
-                $tamanhoDaUrl = strlen($url);
+                    // obtendo quantos caracteres tem na url
+                    $tamanhoDaUrl = strlen($url);
 
-                // verifica se a quantidade de caracteres da url é maior que a quantidade de caracteres da rota
-                if ($tamanhoDaUrl > $tamanhoDaRota) {
+                    // verifica se a quantidade de caracteres da url é maior que a quantidade de caracteres da rota
+                    if ($tamanhoDaUrl > $tamanhoDaRota) {
 
-                    // cortando a url pelo tamanho da rota
-                    $url = substr($url, 0, $tamanhoDaRota);
+                        // cortando a url pelo tamanho da rota
+                        $url = substr($url, 0, $tamanhoDaRota);
 
-                    // compara se o vlaor da $url é igual ao valor da $rotaTratada
-                    if (strcmp($url,$rotaTratada) === 0){
-                        // substituindo o valor da rota pelo valor da url
-                        $route[0] = str_replace($route[0], $url, $route[0]);
+                        // compara se o vlaor da $url é igual ao valor da $rotaTratada
+                        if (strcmp($url, $rotaTratada) === 0) {
+                            // substituindo o valor da rota pelo valor da url
+                            $route[0] = str_replace($route[0], $url, $route[0]);
 
-                        $this->run($url, $route);
-                        exit();
+                            $this->run($url, $route);
+                            exit();
+                        }
                     }
+
+                    $this->urlError++;
+                } else {
+                    $this->run($url, $route);
                 }
 
-                $this->urlError++;
-            } else {
-                $this->run($url, $route);
-            }
-
-            $this->countError(count($this->routes[0]));
-        });
+                $this->countError(count($this->routes[0]));
+            });
+        } catch (\Exception $e) {
+            $error = new Error();
+            $error->errorMessage($e);
+        }
     }
 
     /**
@@ -66,17 +71,19 @@ class Bootstrap
         if ($url == $route[0]) {
             $class = "App\\Controllers\\".ucfirst($route[1]);
             if (!class_exists($class)) {
-                $error = new Error();
-                $error->errorMessage("Error: classe não existe. Verifique seu arquivo web.php ou na pasta App/Controllers.");
-                exit();
+                throw new \Exception("Error: classe não existe. Verifique seu arquivo web.php ou na pasta App/Controllers.");
+                /*$error = new Error();
+                $error->errorMessage("Error: classe não existe. Verifique seu arquivo web.php ou na pasta App/Controllers.");*/
+                //exit();
             }
             $instance = new $class;
             $action = $route[2];
             if (method_exists($instance, $action)) {
                 $instance->$action();
             } else {
-                $error = new Error();
-                $error->errorMessage("Error: método não existe. Verifique no arquivo web.php ou na sua classe.");
+                throw new \Exception("Error: método não existe. Verifique no arquivo web.php ou na sua classe.");
+                /*$error = new Error();
+                $error->errorMessage("Error: método não existe. Verifique no arquivo web.php ou na sua classe.");*/
             }
         } else {
             $this->urlError++;
