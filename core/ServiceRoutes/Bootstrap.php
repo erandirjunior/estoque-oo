@@ -1,4 +1,5 @@
 <?php
+
 namespace Core\ServiceRoutes;
 
 use Core\Error\Error;
@@ -51,7 +52,7 @@ class Bootstrap
                     $this->run($url, $route);
                 }
 
-                $this->countError(count($this->routes[0]));
+                $this->countError($this->routes[0]);
             });
         } catch (\Exception $e) {
             $error = new Error();
@@ -63,27 +64,25 @@ class Bootstrap
      * Faz a verificação se a rota é igual com a url atual, caso seja, cria um objeto e executa determinado método do mesmo,
      * que esteja em determinado índice da rota
      *
-     * @param  string $url   url da página
+     * @param  string $url url da página
      * @param  array  $route rotas
      */
     private function run(string $url, array $route)
     {
         if ($url == $route[0]) {
-            $class = "App\\Controllers\\".ucfirst($route[1]);
+            $class = "App\\Controllers\\" . ucfirst($route[1]);
+
             if (!class_exists($class)) {
-                throw new \Exception("Error: classe não existe. Verifique seu arquivo web.php ou na pasta App/Controllers.");
-                /*$error = new Error();
-                $error->errorMessage("Error: classe não existe. Verifique seu arquivo web.php ou na pasta App/Controllers.");*/
-                //exit();
+                throw new \Exception("Error: Classe $class não existe. Verifique seu arquivo web.php ou na pasta App/Controllers.");
             }
+
             $instance = new $class;
             $action = $route[2];
+
             if (method_exists($instance, $action)) {
                 $instance->$action();
             } else {
-                throw new \Exception("Error: método não existe. Verifique no arquivo web.php ou na sua classe.");
-                /*$error = new Error();
-                $error->errorMessage("Error: método não existe. Verifique no arquivo web.php ou na sua classe.");*/
+                throw new \Exception("Error: Método $action não existe. Verifique no arquivo web.php ou na sua classe.");
             }
         } else {
             $this->urlError++;
@@ -98,18 +97,16 @@ class Bootstrap
      */
     private function countError($value)
     {
-        if ($value == $this->urlError) {
-            $error = new Error();
-            $error->errorMessage("Error: rota não existe. Verifique no arquivo web.php.");
+        if (count($value) == $this->urlError) {
+            throw new \Exception("Error: Rota não existe. Verifique no arquivo web.php.");
         }
     }
 
     /**
      * Retorna o path da uri da página atual, exemplo: /, /exemplo, /exemplo/algumaCoisa
-     *
      * @return string path da url
      */
-    private function getUrl() : string
+    private function getUrl(): string
     {
         return parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
     }

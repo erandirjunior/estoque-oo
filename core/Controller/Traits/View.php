@@ -23,7 +23,7 @@ trait View
             if (file_exists("../app/Views/" . $view . ".php")) {
                 require_once "../app/Views/" . $view . ".php";
             } else {
-                throw new \Exception("view não encontrada");
+                throw new \Exception("view {$view} não encontrada");
             }
         } catch (\Exception $e) {
             $error = new \Core\Error\Error();
