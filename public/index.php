@@ -25,3 +25,6 @@ echo "<br /> <pre>";
 var_dump($stmt->fetchAll(\PDO::FETCH_ASSOC));*/
 
 $bootstrap = new Bootstrap();
+
+/*echo "<pre>";
+Bootstrap::a();*/

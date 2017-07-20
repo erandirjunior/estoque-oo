@@ -6,53 +6,57 @@ use Core\Error\Error;
 
 class Bootstrap
 {
-    private $routes;
+    private static $routes;
 
     private $urlError;
 
     public function __construct()
     {
-        $this->routes[] = Route::run();
         $this->index($this->getUrl());
+    }
+
+    /**
+     * @param mixed $routes
+     */
+    public static function setRoutes($routes, $class, $method)
+    {
+        self::$routes[] = ['r' => $routes, 'c' => $class, 'm' => $method];
     }
 
     public function index(string $url)
     {
         try {
-            array_walk($this->routes[0], function ($route) use ($url) {
+            array_walk(self::$routes, function ($route) use ($url) {
+                if (is_array($route['r'])) {
 
-                if (strpos($route[0], "@")) {
-                    //$rotaLimpa = substr($route[0], 0, strpos($route[0], "@"));
-                    $rotaTratada = str_replace("@", '', $route[0]);
-
-                    // obtendo quantos caracteres tem na rota
-                    $tamanhoDaRota = strlen($rotaTratada);
-
-                    // obtendo quantos caracteres tem na url
-                    $tamanhoDaUrl = strlen($url);
-
-                    // verifica se a quantidade de caracteres da url é maior que a quantidade de caracteres da rota
-                    if ($tamanhoDaUrl > $tamanhoDaRota) {
-
-                        // cortando a url pelo tamanho da rota
-                        $url = substr($url, 0, $tamanhoDaRota);
-
-                        // compara se o vlaor da $url é igual ao valor da $rotaTratada
-                        if (strcmp($url, $rotaTratada) === 0) {
-                            // substituindo o valor da rota pelo valor da url
-                            $route[0] = str_replace($route[0], $url, $route[0]);
-
-                            $this->run($url, $route);
-                            exit();
-                        }
-                    }
-
-                    $this->urlError++;
                 } else {
-                    $this->run($url, $route);
-                }
+                    if (strpos($route['r'], "@")) {
+                        $rotaTratada   = str_replace("@", '', $route['r']);
 
-                $this->countError($this->routes[0]);
+                        // obtendo quantos caracteres tem na rota
+                        $tamanhoDaRota = strlen($rotaTratada);
+
+                        // obtendo quantos caracteres tem na url
+                        $tamanhoDaUrl  = strlen($url);
+
+                        if ($tamanhoDaUrl > $tamanhoDaRota) {
+                            // cortando a url pelo tamanho da rota
+                            $url = substr($url, 0, $tamanhoDaRota);
+
+                            if (strcmp($url, $rotaTratada) === 0) {
+                                // substituindo o valor da rota pelo valor da url
+                                $k['r'] = str_replace($route['r'], $url, $route['r']);
+
+                                $this->run($url, $route);
+
+                                exit();
+                            }
+                        }
+                    } else {
+                        $this->run($url, $route);
+                    }
+                    $this->countError(self::$routes);
+                }
             });
         } catch (\Exception $e) {
             $error = new Error();
@@ -69,15 +73,15 @@ class Bootstrap
      */
     private function run(string $url, array $route)
     {
-        if ($url == $route[0]) {
-            $class = "App\\Controllers\\" . ucfirst($route[1]);
+        if ($url == $route['r']) {
+            $class = "App\\Controllers\\" . ucfirst($route['c']);
 
             if (!class_exists($class)) {
                 throw new \Exception("Error: Classe $class não existe. Verifique seu arquivo web.php ou na pasta App/Controllers.");
             }
 
             $instance = new $class;
-            $action = $route[2];
+            $action   = $route['m'];
 
             if (method_exists($instance, $action)) {
                 $instance->$action();

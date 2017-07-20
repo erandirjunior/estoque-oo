@@ -12,31 +12,14 @@ use Core\Request\PostRequest;
 class Route
 {
     /**
-     * Atributo que recebe as rotas.
-     *
-     * @var
-     */
-    private static $routes;
-
-    /**
-     * Adiciona as rotas ao atibuto $routes.
-     *
-     * @param array $route
-     */
-    private static function add(array $route)
-    {
-        self::$routes[] = $route;
-    }
-
-    /**
      * Recebe as requisições post.
      *
      * @param array $post
      */
-    public static function post(array $post)
+    public static function post($routes, $class, $method)
     {
         PostRequest::add($_POST);
-        self::add($post);
+        Bootstrap::setRoutes($routes, $class, $method);
     }
 
     /**
@@ -44,19 +27,9 @@ class Route
      *
      * @param array $get
      */
-    public static function get(array $get)
+    public static function get($route, $class, $method)
     {
         GetRequest::add($_SERVER);
-        self::add($get);
-    }
-
-    /**
-     * Retorna todas as rotas.
-     *
-     * @return mixed
-     */
-    public static function run()
-    {
-        return self::$routes;
+        Bootstrap::setRoutes($route, $class, $method);
     }
 }
